@@ -1,0 +1,28 @@
+dwlmsg - send ipc messages to dwl
+
+usage:	dwlmsg [-OTLCVMF]
+	dwlmsg [-o <output>] -s [-t <tags>] [-l <layout>]
+	dwlmsg [-o <output>] (-g | -w) [-otlCVMF]
+
+options:
+-g	get
+-s	set
+-w	watch
+-O	get all outputs
+-T	get number of tags
+-L	get all available layouts
+-o	select output
+-t	get/set selected tags (set with [+-^.])
+-l	get/set current layout
+-c	get title and appid of focused client
+-v	get visibility of statusbar
+-m	get fullscreen status
+-f	get floating status
+
+examples:
+	dwlmsg -O  # get all available outputs
+	dwlmsg -w  # acts like dwl stdout
+	dwlmsg -w -c  # watch focused client appid and title
+	dwlmsg -o eDP-1 -s -t +-.^  # enable tag 1, disable tag 2, toggle tag 4 on output eDP-1
+	dwlmsg -l 0  # switch to first layout
+	dwlmsg -l '><>'  # switch to floating layout
