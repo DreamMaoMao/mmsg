@@ -190,9 +190,16 @@ dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
 		}
 		if (tflag) {
 			uint32_t mask = seltags;
-			if (!tagset || strlen(tagset) > tagcount) die("bad tagset %s", tagset);
-			for (int i = 0; tagset[i]; i++) {
-				switch (tagset[i]) {
+			char *t = tagset;
+			int i = 0;
+
+			for (; *t && *t >= '0' && *t <= '9'; t++)
+				i = *t-'0' + i*10;
+
+			if (!*t) mask = 1<<i;
+
+			for (; *t; t++, i++) {
+				switch (*t) {
 				case '-':
 					mask &= ~(1<<i);
 					break;
@@ -204,6 +211,9 @@ dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
 					break;
 				}
 			}
+
+			if (i >= tagcount) die("bad tagset %s", tagset);
+
 			zdwl_ipc_output_v2_set_tags(dwl_ipc_output, mask, 0);
 		}
 		wl_display_flush(display);
