@@ -9,8 +9,6 @@
 
 #define die(fmt, ...)	do { fprintf(stderr, fmt "\n", ##__VA_ARGS__); exit(EXIT_FAILURE); } while (0)
 
-#define ARRAYLEN(x)	(sizeof(x)/sizeof(x[0]))
-
 char *argv0;
 
 static enum {
@@ -39,20 +37,6 @@ static char *tagset;
 static char *layout_name;
 static int layoutcount, layout_idx;
 
-/*
-struct Output {
-	char *name;
-	uint32_t registry_name;
-	struct wl_output *wl_output;
-	struct zdwl_ipc_output_v2 *dwl_ipc_output;
-	int active;
-	uint32_t state, clients, focus;
-	char *layout;
-	char *title, appid;
-	struct wl_list link;
-};
-static struct wl_list outputs;
-*/
 static struct wl_display *display;
 static struct zdwl_ipc_manager_v2 *dwl_ipc_manager;
 
