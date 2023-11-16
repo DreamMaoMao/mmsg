@@ -196,7 +196,7 @@ dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
 				}
 			}
 
-			if (i >= tagcount) die("bad tagset %s", tagset);
+			if (i > tagcount) die("bad tagset %s", tagset);
 
 			zdwl_ipc_output_v2_set_tags(dwl_ipc_output, mask, 0);
 		}
