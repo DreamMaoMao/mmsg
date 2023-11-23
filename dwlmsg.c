@@ -76,9 +76,9 @@ static void
 dwl_ipc_output_active(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output,
 	uint32_t active)
 {
-	if (!oflag) return;
-	if (mode & SET) {
-		output_name = data;
+	if (!oflag) {
+		if (mode & SET && !output_name && active)
+			output_name = strdup(data);
 		return;
 	}
 	char *output_name = data;
@@ -160,6 +160,7 @@ static void
 dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
 {
 	if (mode & SET) {
+		if (data && (!output_name || strcmp(output_name, (char *)data))) return;
 		if (lflag) {
 			if (!layout_idx) {
 				for (char *c = layout_name; *c; c++) {
@@ -230,14 +231,12 @@ static void
 wl_output_name(void *data, struct wl_output *output, const char *name)
 {
 	if (Oflag) printf("%s\n", name);
-	if (oflag && mode & GET && output_name &&
-			strcmp(output_name, name) != 0) {
+	if (output_name && strcmp(output_name, name) != 0) {
 		wl_output_release(output);
 		return;
 	}
 	struct zdwl_ipc_output_v2 *dwl_ipc_output = zdwl_ipc_manager_v2_get_output(dwl_ipc_manager, output);
 	zdwl_ipc_output_v2_add_listener(dwl_ipc_output, &dwl_ipc_output_listener, output_name ? NULL : strdup(name));
-	//TODO select focused output
 }
 
 static const struct wl_output_listener output_listener = {
@@ -303,11 +302,11 @@ main(int argc, char *argv[])
 		mode = WATCH;
 		break;
 	case 'o':
-		oflag = 1;
 		if (mode == SET)
 			output_name = EARGF(usage());
 		else
 			output_name = ARGF();
+		if (!output_name) oflag = 1;
 		break;
 	case 't':
 		tflag = 1;
@@ -362,7 +361,7 @@ main(int argc, char *argv[])
 		die("bad option %c", ARGC());
 	} ARGEND
 	if (mode == NONE) usage();
-	if (mode & GET && (!oflag || output_name) && !(tflag || lflag || Oflag || Tflag || Lflag || cflag || vflag || mflag || fflag))
+	if (mode & GET && !output_name && !(oflag || tflag || lflag || Oflag || Tflag || Lflag || cflag || vflag || mflag || fflag))
 		oflag = tflag = lflag = cflag = vflag = mflag = fflag = 1;
 
 	display = wl_display_connect(NULL);
