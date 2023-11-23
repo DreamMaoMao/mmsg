@@ -21,7 +21,7 @@ options:
 
 examples:
 	dwlmsg -O  # get all available outputs
-	dwlmsg -w  # acts like dwl stdout
+	dwlmsg -w  # act like dwl stdout
 	dwlmsg -w -c  # watch focused client appid and title
 	dwlmsg -o eDP-1 -s -t +-.^  # enable tag 1, disable tag 2, toggle tag 4 on output eDP-1
 	dwlmsg -l 0  # switch to first layout
