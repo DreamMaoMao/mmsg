@@ -363,7 +363,7 @@ main(int argc, char *argv[])
 	} ARGEND
 	if (mode == NONE) usage();
 	if (mode & GET && (!oflag || output_name) && !(tflag || lflag || Oflag || Tflag || Lflag || cflag || vflag || mflag || fflag))
-		tflag = lflag = cflag = vflag = mflag = fflag = 1;
+		oflag = tflag = lflag = cflag = vflag = mflag = fflag = 1;
 
 	display = wl_display_connect(NULL);
 	if (!display) die("bad display");
