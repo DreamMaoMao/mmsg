@@ -37,6 +37,14 @@ static char *tagset;
 static char *layout_name;
 static int layoutcount, layout_idx;
 
+struct output {
+	char *output_name;
+	uint32_t name;
+};
+static int outputs_buflen = 4;
+static struct output *outputs;
+static int outputcount;
+
 static struct wl_display *display;
 static struct zdwl_ipc_manager_v2 *dwl_ipc_manager;
 
@@ -230,6 +238,11 @@ static const struct zdwl_ipc_output_v2_listener dwl_ipc_output_listener = {
 static void
 wl_output_name(void *data, struct wl_output *output, const char *name)
 {
+	if (outputs) {
+		struct output *o = (struct output *) data;
+		o->output_name = strdup(name);
+		printf("+ ");
+	}
 	if (Oflag) printf("%s\n", name);
 	if (output_name && strcmp(output_name, name) != 0) {
 		wl_output_release(output);
@@ -256,7 +269,14 @@ global_add(void *data, struct wl_registry *wl_registry,
 		struct wl_output *o = wl_registry_bind(
 				wl_registry, name, &wl_output_interface,
 				WL_OUTPUT_NAME_SINCE_VERSION);
-		wl_output_add_listener(o, &output_listener, NULL);
+		wl_output_add_listener(o, &output_listener, outputs ? &outputs[outputcount] : NULL);
+		if (!outputs) return;
+		if (outputcount >= outputs_buflen) {
+			outputs_buflen *= 2;
+			outputs = realloc(outputs, outputs_buflen * sizeof(struct output));
+		}
+		outputs[outputcount].name = name;
+		outputcount++;
 	} else if (strcmp(interface, zdwl_ipc_manager_v2_interface.name) == 0) {
 		dwl_ipc_manager = wl_registry_bind(wl_registry, name,
 				&zdwl_ipc_manager_v2_interface, 2);
@@ -265,8 +285,16 @@ global_add(void *data, struct wl_registry *wl_registry,
 }
 
 static void
-global_remove()
+global_remove(void *data, struct wl_registry *wl_registry, uint32_t name)
 {
+	if (!outputs) return;
+	for (int i = 0; i < outputcount; i++) {
+		if (outputs[i].name == name) {
+			printf("- %s\n", outputs[i].output_name);
+			free(outputs[i].output_name);
+			outputs[i] = outputs[--outputcount];
+		}
+	}
 }
 
 static const struct wl_registry_listener registry_listener = {
@@ -280,7 +308,7 @@ usage(void)
 	fprintf(stderr, "usage:"
 			"\t%s [-OTL]\n"
 			"\t%s [-o <output>] -s [-t <tags>] [-l <layout>]\n"
-			"\t%s [-o <output>] (-g | -w) [-otlcvmf]\n",
+			"\t%s [-o <output>] (-g | -w) [-Ootlcvmf]\n",
 			argv0, argv0, argv0);
 	exit(2);
 }
@@ -324,8 +352,11 @@ main(int argc, char *argv[])
 		break;
 	case 'O':
 		Oflag = 1;
-		if (mode && mode != GET) usage();
-		mode = GET;
+		if (mode && !(mode & GET)) usage();
+		if (mode & WATCH)
+			outputs = malloc(outputs_buflen * sizeof(struct output));
+		else
+			mode = GET;
 		break;
 	case 'T':
 		Tflag = 1;

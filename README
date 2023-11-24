@@ -20,9 +20,10 @@ options:
 -f	get floating status
 
 examples:
-	dwlmsg -O  # get all available outputs
 	dwlmsg -w  # act like dwl stdout
 	dwlmsg -w -c  # watch focused client appid and title
+	dwlmsg -O  # get all available outputs
+	dwlmsg -w -O  # watch available outputs
 	dwlmsg -o eDP-1 -s -t +-.^  # enable tag 1, disable tag 2, toggle tag 4 on output eDP-1
 	dwlmsg -l 0  # switch to first layout
 	dwlmsg -l '><>'  # switch to floating layout
