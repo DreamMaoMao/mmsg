@@ -19,13 +19,6 @@ dwlmsg: dwlmsg.o dwl-ipc-unstable-v2-protocol.o
 
 dwlmsg.o: dwlmsg.c dwl-ipc-unstable-v2-protocol.h
 
-xdg-output-unstable-v1-protocol.h:
-	$(WAYLAND_SCANNER) client-header \
-		$(WAYLAND_PROTOCOLS)/unstable/xdg-output/xdg-output-unstable-v1.xml $@
-xdg-output-unstable-v1-protocol.c:
-	$(WAYLAND_SCANNER) private-code \
-		$(WAYLAND_PROTOCOLS)/unstable/xdg-output/xdg-output-unstable-v1.xml $@
-
 dwl-ipc-unstable-v2-protocol.h:
 	$(WAYLAND_SCANNER) client-header \
 		protocols/dwl-ipc-unstable-v2.xml $@
