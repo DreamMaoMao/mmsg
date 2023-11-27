@@ -371,22 +371,22 @@ main(int argc, char *argv[])
 	case 'c':
 		cflag = 1;
 		if (mode == SET) usage();
-		mode = GET;
+		mode |= GET;
 		break;
 	case 'v':
 		vflag = 1;
 		if (mode == SET) usage();
-		mode = GET;
+		mode |= GET;
 		break;
 	case 'm':
 		mflag = 1;
 		if (mode == SET) usage();
-		mode = GET;
+		mode |= GET;
 		break;
 	case 'f':
 		fflag = 1;
 		if (mode == SET) usage();
-		mode = GET;
+		mode |= GET;
 		break;
 	default:
 		die("bad option %c", ARGC());
