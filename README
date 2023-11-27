@@ -1,8 +1,8 @@
 dwlmsg - send ipc messages to dwl
 
-usage:	dwlmsg [-OTLCVMF]
-	dwlmsg [-o <output>] -s [-t <tags>] [-l <layout>]
-	dwlmsg [-o <output>] (-g | -w) [-otlCVMF]
+usage:	dwlmsg [-OTL]
+	dwlmsg [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>]
+	dwlmsg [-o <output>] (-g | -w) [-Ootlcvmf]
 
 options:
 -g	get

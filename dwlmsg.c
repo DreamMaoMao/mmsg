@@ -36,6 +36,7 @@ static int tagcount;
 static char *tagset;
 static char *layout_name;
 static int layoutcount, layout_idx;
+static char *client_tags;
 
 struct output {
 	char *output_name;
@@ -128,7 +129,7 @@ static void
 dwl_ipc_output_title(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output,
 	const char *title)
 {
-	if (!cflag) return;
+	if (!(cflag && mode & GET)) return;
 	char *output_name = data;
 	if (output_name) printf("%s ", output_name);
 	printf("title %s\n", title);
@@ -138,7 +139,7 @@ static void
 dwl_ipc_output_appid(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output,
 	const char *appid)
 {
-	if (!cflag) return;
+	if (!(cflag && mode & GET)) return;
 	char *output_name = data;
 	if (output_name) printf("%s ", output_name);
 	printf("appid %s\n", appid);
@@ -208,6 +209,34 @@ dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
 			if (i > tagcount) die("bad tagset %s", tagset);
 
 			zdwl_ipc_output_v2_set_tags(dwl_ipc_output, mask, 0);
+		}
+		if (cflag) {
+			uint32_t and = ~0, xor = 0;
+			char *t = client_tags;
+			int i = 0;
+
+			for (; *t && *t >= '0' && *t <= '9'; t++)
+				i = *t-'0' + i*10;
+
+			if (!*t) t = "+";
+
+			for (; *t; t++, i++) {
+				switch (*t) {
+				case '-':
+					and &= ~(1<<i);
+					break;
+				case '+': 
+					and &= ~(1<<i);
+					xor |= 1<<i;
+					break;
+				case '^':
+					xor |= 1<<i;
+					break;
+				}
+			}
+			if (i > tagcount) die("bad client tagset %s", client_tags);
+
+			zdwl_ipc_output_v2_set_client_tags(dwl_ipc_output, and, xor);
 		}
 		wl_display_flush(display);
 		exit(0);
@@ -307,7 +336,7 @@ usage(void)
 {
 	fprintf(stderr, "usage:"
 			"\t%s [-OTL]\n"
-			"\t%s [-o <output>] -s [-t <tags>] [-l <layout>]\n"
+			"\t%s [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>]\n"
 			"\t%s [-o <output>] (-g | -w) [-Ootlcvmf]\n",
 			argv0, argv0, argv0);
 	exit(2);
@@ -350,6 +379,13 @@ main(int argc, char *argv[])
 			layout_name = EARGF(usage());
 		}
 		break;
+	case 'c':
+		cflag = 1;
+		if (!(mode & GET)) {
+			mode = SET;
+			client_tags = EARGF(usage());
+		}
+		break;
 	case 'O':
 		Oflag = 1;
 		if (mode && !(mode & GET)) usage();
@@ -367,11 +403,6 @@ main(int argc, char *argv[])
 		Lflag = 1;
 		if (mode && mode != GET) usage();
 		mode = GET;
-		break;
-	case 'c':
-		cflag = 1;
-		if (mode == SET) usage();
-		mode |= GET;
 		break;
 	case 'v':
 		vflag = 1;
