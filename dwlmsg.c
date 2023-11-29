@@ -420,7 +420,8 @@ main(int argc, char *argv[])
 		mode |= GET;
 		break;
 	default:
-		die("bad option %c", ARGC());
+		fprintf(stderr, "bad option %c\n", ARGC());
+		usage();
 	} ARGEND
 	if (mode == NONE) usage();
 	if (mode & GET && !output_name && !(oflag || tflag || lflag || Oflag || Tflag || Lflag || cflag || vflag || mflag || fflag))
