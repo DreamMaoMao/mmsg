@@ -1,4 +1,5 @@
 #include "arg.h"
+#include "dynarr.h"
 #include <poll.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,9 +43,7 @@ struct output {
 	char *output_name;
 	uint32_t name;
 };
-static int outputs_buflen = 4;
-static struct output *outputs;
-static int outputcount;
+static DYNARR_DEF(struct output) outputs;
 
 static struct wl_display *display;
 static struct zdwl_ipc_manager_v2 *dwl_ipc_manager;
@@ -267,7 +266,7 @@ static const struct zdwl_ipc_output_v2_listener dwl_ipc_output_listener = {
 static void
 wl_output_name(void *data, struct wl_output *output, const char *name)
 {
-	if (outputs) {
+	if (outputs.arr) {
 		struct output *o = (struct output *) data;
 		o->output_name = strdup(name);
 		printf("+ ");
@@ -298,14 +297,12 @@ global_add(void *data, struct wl_registry *wl_registry,
 		struct wl_output *o = wl_registry_bind(
 				wl_registry, name, &wl_output_interface,
 				WL_OUTPUT_NAME_SINCE_VERSION);
-		wl_output_add_listener(o, &output_listener, outputs ? &outputs[outputcount] : NULL);
-		if (!outputs) return;
-		if (outputcount >= outputs_buflen) {
-			outputs_buflen *= 2;
-			outputs = realloc(outputs, outputs_buflen * sizeof(struct output));
+		if (!outputs.arr) {
+			wl_output_add_listener(o, &output_listener, NULL);
+		} else {
+			DYNARR_PUSH(&outputs, (struct output) {.name = name});
+			wl_output_add_listener(o, &output_listener, &outputs.arr[outputs.len - 1]);
 		}
-		outputs[outputcount].name = name;
-		outputcount++;
 	} else if (strcmp(interface, zdwl_ipc_manager_v2_interface.name) == 0) {
 		dwl_ipc_manager = wl_registry_bind(wl_registry, name,
 				&zdwl_ipc_manager_v2_interface, 2);
@@ -316,12 +313,13 @@ global_add(void *data, struct wl_registry *wl_registry,
 static void
 global_remove(void *data, struct wl_registry *wl_registry, uint32_t name)
 {
-	if (!outputs) return;
-	for (int i = 0; i < outputcount; i++) {
-		if (outputs[i].name == name) {
-			printf("- %s\n", outputs[i].output_name);
-			free(outputs[i].output_name);
-			outputs[i] = outputs[--outputcount];
+	if (!outputs.arr) return;
+	struct output *o = outputs.arr;
+	for (size_t i = 0; i < outputs.len; i++, o++) {
+		if (o->name == name) {
+			printf("- %s\n", o->output_name);
+			free(o->output_name);
+			*o = DYNARR_POP(&outputs);
 		}
 	}
 }
@@ -390,7 +388,7 @@ main(int argc, char *argv[])
 		Oflag = 1;
 		if (mode && !(mode & GET)) usage();
 		if (mode & WATCH)
-			outputs = malloc(outputs_buflen * sizeof(struct output));
+			DYNARR_INIT(&outputs);
 		else
 			mode = GET;
 		break;
