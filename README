@@ -43,7 +43,3 @@ supported layouts:
 mmsg -l "S" # switch to scroller layout
 ```
 
-## get window title or appid
-```
-mmsg -w # then change focus to the window you want to get
-```
