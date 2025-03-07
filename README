@@ -1,8 +1,10 @@
-dwlmsg - send ipc messages to dwl
+this project is a fork of [dwlmsg](https://codeberg.org/notchoc/dwlmsg)
 
-usage:	dwlmsg [-OTL]
-	dwlmsg [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>]
-	dwlmsg [-o <output>] (-g | -w) [-Ootlcvmf]
+mmsg - send ipc messages to maomaowm
+
+usage:	mmsg [-OTL]
+	mmsg [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>]
+	mmsg [-o <output>] (-g | -w) [-Ootlcvmf]
 
 options:
 -g	get
@@ -20,10 +22,10 @@ options:
 -f	get floating status
 
 examples:
-	dwlmsg -w  # act like dwl stdout
-	dwlmsg -w -c  # watch focused client appid and title
-	dwlmsg -O  # get all available outputs
-	dwlmsg -w -O  # watch available outputs
-	dwlmsg -o eDP-1 -s -t +-.^  # enable tag 1, disable tag 2, toggle tag 4 on output eDP-1
-	dwlmsg -l 0  # switch to first layout
-	dwlmsg -l '><>'  # switch to floating layout
+	mmsg -w  # act like dwl stdout
+	mmsg -w -c  # watch focused client appid and title
+	mmsg -O  # get all available outputs
+	mmsg -w -O  # watch available outputs
+	mmsg -o eDP-1 -s -t +-.^  # enable tag 1, disable tag 2, toggle tag 4 on output eDP-1
+	mmsg -l 0  # switch to first layout
+	mmsg -l 'S'  # switch to scroller layout
