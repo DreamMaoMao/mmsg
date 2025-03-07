@@ -185,18 +185,18 @@ dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
 			for (; *t; t++, i++) {
 				switch (*t) {
 				case '-':
-					mask &= ~(1<<i);
+					mask &= ~(1<<(i-1));
 					break;
 				case '+': 
-					mask |= 1<<i;
+					mask |= 1<<(i-1);
 					break;
 				case '^':
-					mask ^= 1<<i;
+					mask ^= 1<<(i-1);
 					break;
 				}
 			}
 
-			if (i > tagcount) die("bad tagset %s", tagset);
+			if ((i-1) > tagcount) die("bad tagset %s", tagset);
 
 			zdwl_ipc_output_v2_set_tags(dwl_ipc_output, mask, 0);
 		}
@@ -224,7 +224,7 @@ dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
 					break;
 				}
 			}
-			if ((i) > tagcount) die("bad client tagset %s", client_tags);
+			if ((i-1) > tagcount) die("bad client tagset %s", client_tags);
 
 			zdwl_ipc_output_v2_set_client_tags(dwl_ipc_output, and, xor);
 		}

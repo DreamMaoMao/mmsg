@@ -26,7 +26,6 @@ examples:
 	mmsg -w -c  # watch focused client appid and title
 	mmsg -O  # get all available outputs
 	mmsg -w -O  # watch available outputs
-	mmsg -o eDP-1 -s -t +-.^  # enable tag 1, disable tag 2, toggle tag 4 on output eDP-1
 	mmsg -l 0  # switch to first layout
 	mmsg -l 'S'  # switch to scroller layout
 
@@ -58,4 +57,11 @@ mmsg -t 0 # switch to lastfocused tag
 monitor | tag_num | isfocused_tag | num_of_clients | isurgent_tag
 eDP-1 		tag 2 			0 			1 				0
 
+```
+
+## toggle tag
+```
+mmsg -s -t 2+ # add current from to 2 
+mmsg -s -t 2- # remove current from tag 2
+mmsg -s -t 2^ # toggle current from tag 2
 ```
