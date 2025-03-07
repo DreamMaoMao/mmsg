@@ -105,7 +105,7 @@ dwl_ipc_output_tag(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output,
 	if (!(mode & GET)) return;
 	char *output_name = data;
 	if (output_name) printf("%s ", output_name);
-	printf("tag %u %u %u %u\n", tag, state, clients, focused);
+	printf("tag %u %u %u %u\n", tag + 1, state, clients, focused);
 }
 
 static void
@@ -224,7 +224,7 @@ dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
 					break;
 				}
 			}
-			if ((i-1) > tagcount) die("bad client tagset %s", client_tags);
+			if ((i) > tagcount) die("bad client tagset %s", client_tags);
 
 			zdwl_ipc_output_v2_set_client_tags(dwl_ipc_output, and, xor);
 		}
