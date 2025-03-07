@@ -29,3 +29,21 @@ examples:
 	mmsg -o eDP-1 -s -t +-.^  # enable tag 1, disable tag 2, toggle tag 4 on output eDP-1
 	mmsg -l 0  # switch to first layout
 	mmsg -l 'S'  # switch to scroller layout
+
+# some use case
+## switch layout
+supported layouts:
+"S"->scroller
+"T"->tile        
+"G"->grid    
+"M"->monocle
+"D"->dwindle 
+"P"->spiral
+```
+mmsg -l "S" # switch to scroller layout
+```
+
+## get window title or appid
+```
+mmsg -w # then change focus to the window you want to get
+```
