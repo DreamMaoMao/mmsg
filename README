@@ -42,4 +42,20 @@ supported layouts:
 ```
 mmsg -l "S" # switch to scroller layout
 ```
+## switch to tag
+```
 
+mmsg -t 1 # switch to tag 1
+mmsg -t 2 # switch to tag 2
+...
+
+mmsg -t 0 # switch to lastfocused tag
+```
+
+## get tag message
+```
+>>> mmsg -g -t
+monitor | tag_num | isfocused_tag | num_of_clients | isurgent_tag
+eDP-1 		tag 2 			0 			1 				0
+
+```
