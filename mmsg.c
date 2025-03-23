@@ -29,6 +29,7 @@ static int cflag;
 static int vflag;
 static int mflag;
 static int fflag;
+static int qflag;
 
 static uint32_t occ, seltags, sel, urg;
 
@@ -169,6 +170,9 @@ dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
 {
 	if (mode & SET) {
 		if (data && (!output_name || strcmp(output_name, (char *)data))) return;
+		if (qflag) {
+			zdwl_ipc_output_v2_quit(dwl_ipc_output);
+		}
 		if (lflag) {
 			zdwl_ipc_output_v2_set_layout(dwl_ipc_output, layout_idx);
 		}
@@ -335,6 +339,12 @@ int
 main(int argc, char *argv[])
 {
 	ARGBEGIN {
+	case 'q':
+		qflag = 1;
+		if (!(mode & GET)) {
+			mode = SET;
+		}
+		break;
 	case 's':
 		if (mode != NONE) usage();
 		mode = SET;
