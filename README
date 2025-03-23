@@ -2,6 +2,19 @@ this project is a fork of [dwlmsg](https://codeberg.org/notchoc/dwlmsg)
 
 mmsg - send ipc messages to maomaowm
 
+
+# install
+Arch
+```
+yay -S mmsg-git
+```
+Other
+```
+git clone https://github.com/DreamMaoMao/mmsg
+cd mmsg
+sudo make install
+```
+
 usage:	mmsg [-OTL]
 	mmsg [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>]
 	mmsg [-o <output>] (-g | -w) [-Ootlcvmf]
