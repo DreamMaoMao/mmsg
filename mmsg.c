@@ -328,7 +328,7 @@ static void
 usage(void)
 {
 	fprintf(stderr, "usage:"
-			"\t%s [-OTL]\n"
+			"\t%s [-OTLq]\n"
 			"\t%s [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>]\n"
 			"\t%s [-o <output>] (-g | -w) [-Ootlcvmf]\n",
 			argv0, argv0, argv0);

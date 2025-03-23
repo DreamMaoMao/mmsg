@@ -7,6 +7,7 @@ usage:	mmsg [-OTL]
 	mmsg [-o <output>] (-g | -w) [-Ootlcvmf]
 
 options:
+-q	quit maomao
 -g	get
 -s	set
 -w	watch
