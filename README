@@ -17,7 +17,7 @@ sudo make install
 
 usage:	mmsg [-OTL]
 	mmsg [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>]
-	mmsg [-o <output>] (-g | -w) [-Ootlcvmf]
+	mmsg [-o <output>] (-g | -w) [-Ootlcvmf] [-d <cmd>,<arg1>,<arg2>]
 
 options:
 -q	quit maomao
@@ -34,6 +34,7 @@ options:
 -v	get visibility of statusbar
 -m	get fullscreen status
 -f	get floating status
+-d  excute maomao dispatch
 
 examples:
 	mmsg -w  # act like dwl stdout
@@ -42,6 +43,12 @@ examples:
 	mmsg -w -O  # watch available outputs
 	mmsg -l 0  # switch to first layout
 	mmsg -l 'S'  # switch to scroller layout
+
+# excute maomao dispatch
+```
+mmsg -d killclient
+mmsg -d resizewin,+10,+10
+```
 
 # some use case
 ## switch layout
