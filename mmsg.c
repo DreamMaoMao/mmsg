@@ -405,49 +405,57 @@ main(int argc, char *argv[])
             client_tags = EARGF(usage());
         }
         break;
-	case 'd':
-	    dflag = 1;
-	    if (!(mode & GET)) {
-	        mode = SET;
-	        char *arg = EARGF(usage());
-	        // Split on commas and trim whitespace
-	        dispatch_cmd = arg;
-	        char *comma1 = strchr(arg, ',');
-	        if (comma1) {
-	            *comma1 = '\0';
-	            dispatch_arg1 = comma1 + 1;
-	            // Trim leading whitespace from arg1
-	            while (isspace(*dispatch_arg1)) dispatch_arg1++;
-			
-	            char *comma2 = strchr(dispatch_arg1, ',');
-	            if (comma2) {
-	                *comma2 = '\0';
-	                dispatch_arg2 = comma2 + 1;
-	                // Trim leading whitespace from arg2
-	                while (isspace(*dispatch_arg2)) dispatch_arg2++;
-				
-	                // Trim trailing whitespace from all args
-	                char *end;
-	                end = dispatch_cmd + strlen(dispatch_cmd) - 1;
-	                while (end > dispatch_cmd && isspace(*end)) end--;
-	                *(end + 1) = '\0';
-				
-	                end = dispatch_arg1 + strlen(dispatch_arg1) - 1;
-	                while (end > dispatch_arg1 && isspace(*end)) end--;
-	                *(end + 1) = '\0';
-				
-	                end = dispatch_arg2 + strlen(dispatch_arg2) - 1;
-	                while (end > dispatch_arg2 && isspace(*end)) end--;
-	                *(end + 1) = '\0';
-	            } else {
-	                dispatch_arg2 = "";
-	            }
-	        } else {
-	            dispatch_arg1 = "";
-	            dispatch_arg2 = "";
-	        }
-	    }
-	    break;
+    case 'd':
+        dflag = 1;
+        if (!(mode & GET)) {
+            mode = SET;
+            char *arg = EARGF(usage());
+            
+            // Trim leading and trailing whitespace from entire argument first
+            while (isspace(*arg)) arg++;
+            char *end = arg + strlen(arg) - 1;
+            while (end > arg && isspace(*end)) end--;
+            *(end + 1) = '\0';
+            
+            dispatch_cmd = arg;
+            char *comma1 = strchr(arg, ',');
+            if (comma1) {
+                *comma1 = '\0';
+                
+                // Trim trailing whitespace from command
+                end = dispatch_cmd + strlen(dispatch_cmd) - 1;
+                while (end > dispatch_cmd && isspace(*end)) end--;
+                *(end + 1) = '\0';
+                
+                dispatch_arg1 = comma1 + 1;
+                // Trim leading whitespace from arg1
+                while (isspace(*dispatch_arg1)) dispatch_arg1++;
+                
+                // Trim trailing whitespace from arg1 before looking for next comma
+                end = dispatch_arg1 + strlen(dispatch_arg1) - 1;
+                while (end > dispatch_arg1 && isspace(*end)) end--;
+                *(end + 1) = '\0';
+                
+                char *comma2 = strchr(dispatch_arg1, ',');
+                if (comma2) {
+                    *comma2 = '\0';
+                    dispatch_arg2 = comma2 + 1;
+                    // Trim leading whitespace from arg2
+                    while (isspace(*dispatch_arg2)) dispatch_arg2++;
+                    
+                    // Trim trailing whitespace from arg2
+                    end = dispatch_arg2 + strlen(dispatch_arg2) - 1;
+                    while (end > dispatch_arg2 && isspace(*end)) end--;
+                    *(end + 1) = '\0';
+                } else {
+                    dispatch_arg2 = "";
+                }
+            } else {
+                dispatch_arg1 = "";
+                dispatch_arg2 = "";
+            }
+        }
+        break;
     case 'O':
         Oflag = 1;
         if (mode && !(mode & GET)) usage();
