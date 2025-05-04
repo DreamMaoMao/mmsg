@@ -73,10 +73,11 @@ mmsg -t 0 # switch to lastfocused tag
 ```
 
 ## get tag message
+state: 0 -> none, 1 -> active, 2 -> urgent
 ```
 >>> mmsg -g -t
-monitor | tag_num | isfocused_tag | num_of_clients | isurgent_tag
-eDP-1 		tag 2 			0 			1 				0
+monitor | tag_num | tag_state | num_of_clients_in_tag | isfocused_client
+eDP-1 		tag 2 	  0 			1 				       0
 
 ```
 
