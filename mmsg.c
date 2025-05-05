@@ -44,6 +44,8 @@ static char *client_tags;
 static char *dispatch_cmd;
 static char *dispatch_arg1;
 static char *dispatch_arg2;
+static char *dispatch_arg3;
+static char *dispatch_arg4;
 
 struct output {
     char *output_name;
@@ -250,7 +252,7 @@ dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
             zdwl_ipc_output_v2_set_client_tags(dwl_ipc_output, and, xor);
         }
         if (dflag) {
-            zdwl_ipc_output_v2_dispatch(dwl_ipc_output, dispatch_cmd, dispatch_arg1, dispatch_arg2);
+            zdwl_ipc_output_v2_dispatch(dwl_ipc_output, dispatch_cmd, dispatch_arg1, dispatch_arg2, dispatch_arg3, dispatch_arg4);
         }
         wl_display_flush(display);
         exit(0);
@@ -443,16 +445,51 @@ main(int argc, char *argv[])
                     // Trim leading whitespace from arg2
                     while (isspace(*dispatch_arg2)) dispatch_arg2++;
                     
-                    // Trim trailing whitespace from arg2
+                    // Trim trailing whitespace from arg2 before looking for next comma
                     end = dispatch_arg2 + strlen(dispatch_arg2) - 1;
                     while (end > dispatch_arg2 && isspace(*end)) end--;
                     *(end + 1) = '\0';
+                    
+                    char *comma3 = strchr(dispatch_arg2, ',');
+                    if (comma3) {
+                        *comma3 = '\0';
+                        dispatch_arg3 = comma3 + 1;
+                        // Trim leading whitespace from arg3
+                        while (isspace(*dispatch_arg3)) dispatch_arg3++;
+                        
+                        // Trim trailing whitespace from arg3 before looking for next comma
+                        end = dispatch_arg3 + strlen(dispatch_arg3) - 1;
+                        while (end > dispatch_arg3 && isspace(*end)) end--;
+                        *(end + 1) = '\0';
+                        
+                        char *comma4 = strchr(dispatch_arg3, ',');
+                        if (comma4) {
+                            *comma4 = '\0';
+                            dispatch_arg4 = comma4 + 1;
+                            // Trim leading whitespace from arg4
+                            while (isspace(*dispatch_arg4)) dispatch_arg4++;
+                            
+                            // Trim trailing whitespace from arg4
+                            end = dispatch_arg4 + strlen(dispatch_arg4) - 1;
+                            while (end > dispatch_arg4 && isspace(*end)) end--;
+                            *(end + 1) = '\0';
+                        } else {
+                            dispatch_arg4 = "";
+                        }
+                    } else {
+                        dispatch_arg3 = "";
+                        dispatch_arg4 = "";
+                    }
                 } else {
                     dispatch_arg2 = "";
+                    dispatch_arg3 = "";
+                    dispatch_arg4 = "";
                 }
             } else {
                 dispatch_arg1 = "";
                 dispatch_arg2 = "";
+                dispatch_arg3 = "";
+                dispatch_arg4 = "";
             }
         }
         break;
