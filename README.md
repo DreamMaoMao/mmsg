@@ -98,6 +98,11 @@ Example output:
 |---------|------------|-----------|----------------|----------------|
 | eDP-1   | tag 2      | 0         | 1              | 0              |
 
+
+| Monitor | occupied tags mask | active tags mask | urgent tags mask |
+|---------|------------|-----------|----------------|
+| eDP-1   | 14          |  6             | 0              
+
 ### Toggle Tag
 ```bash
 mmsg -s -t 2+ # add current window to tag 2

@@ -33,7 +33,7 @@ static int fflag;
 static int qflag;
 static int dflag;
 
-static uint32_t occ, seltags, sel, urg;
+static uint32_t occ, seltags, total_clients, urg;
 
 static char *output_name;
 static int tagcount;
@@ -69,6 +69,15 @@ static void noop_done(void *data, struct wl_output *wl_output) {}
 static void noop_scale(void *data, struct wl_output *wl_output, int32_t factor) {}
 
 static void noop_description(void *data, struct wl_output *wl_output, const char *description) {}
+
+
+// 将 n 转换为 9 位二进制字符串，结果存入 buf（至少长度 10）
+void bin_str_9bits(char *buf, unsigned int n) {
+    for (int i = 8; i >= 0; i--) {
+        *buf++ = ((n >> i) & 1) ? '1' : '0';
+    }
+    *buf = '\0'; // 字符串结尾
+}
 
 static void
 dwl_ipc_tags(void *data, struct zdwl_ipc_manager_v2 *dwl_ipc_manager, uint32_t count)
@@ -119,9 +128,13 @@ dwl_ipc_output_tag(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output,
     uint32_t tag, uint32_t state, uint32_t clients, uint32_t focused)
 {
     if (!tflag) return;
-    if (state != ZDWL_IPC_OUTPUT_V2_TAG_STATE_NONE) seltags |= 1<<tag;
-    if (state == ZDWL_IPC_OUTPUT_V2_TAG_STATE_ACTIVE) urg |= 1<<tag;
+    if (state == ZDWL_IPC_OUTPUT_V2_TAG_STATE_ACTIVE) seltags |= 1<<tag;
+    if (state == ZDWL_IPC_OUTPUT_V2_TAG_STATE_URGENT) urg |= 1<<tag;
     if (clients > 0) occ |= 1<<tag;
+
+    // 累计所有 tag 的 clients 总数
+    total_clients += clients;
+
     if (!(mode & GET)) return;
     char *output_name = data;
     if (output_name) printf("%s ", output_name);
@@ -259,9 +272,17 @@ dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
     } else {
         if (tflag) {
             char *output_name = data;
-            if (output_name) printf("%s ", output_name);
-            printf("tags %u %u %u %u\n", occ, seltags, sel, urg);
-            occ = seltags = sel = urg = 0;
+
+            printf("%s clients %u\n", output_name, total_clients);        
+      
+            char occ_str[10], seltags_str[10], urg_str[10];
+
+            bin_str_9bits(occ_str, occ);
+            bin_str_9bits(seltags_str, seltags);
+            bin_str_9bits(urg_str, urg);
+            printf("%s tags %u %u %u\n", output_name, occ, seltags, urg);        
+            printf("%s tags %s %s %s\n", output_name, occ_str, seltags_str, urg_str);
+            occ = seltags = total_clients = urg = 0;
         }
     }
     fflush(stdout);
