@@ -45,25 +45,14 @@ mmsg [-o <output>] (-g | -w) [-Ootlcvmf] [-d <cmd>,<arg1>,<arg2>]
 | `-f`   | Get floating status |
 | `-d`   | Execute maomao dispatch |
 
-## Examples
+## Use Cases
 
-```bash
-mmsg -w  # act like dwl stdout
-mmsg -w -c  # watch focused client appid and title
-mmsg -O  # get all available outputs
-mmsg -w -O  # watch available outputs
-mmsg -l 0  # switch to first layout
-mmsg -l 'S'  # switch to scroller layout
-```
-
-## Execute maomao dispatch
+### Execute maomao dispatch
 
 ```bash
 mmsg -d killclient
 mmsg -d resizewin,+10,+10
 ```
-
-## Use Cases
 
 ### Switch Layout
 Supported layouts:
@@ -82,15 +71,19 @@ mmsg -l "S" # switch to scroller layout
 ```bash
 mmsg -t 1 # switch to tag 1
 mmsg -t 2 # switch to tag 2
-...
-mmsg -t 0 # switch to lastfocused tag
 ```
 
-### Get Tag Message
+### get message
 ```bash
-mmsg -g -t
+mmsg -w  # watch for all message changes
+mmsg -g # get all message without watch
+mmsg -w -c  # watch focused client appid and title
+mmsg -O  # get all available outputs
+mmsg -g -t  # get all tags message
+mmsg -g -c  # get current focused client message
 ```
 
+#### tag message
 - State: 0 → none, 1 → active, 2 → urgent
 
 Example output:
@@ -101,7 +94,7 @@ Example output:
 
 | Monitor | occupied tags mask | active tags mask | urgent tags mask |
 |---------|------------|-----------|----------------|
-| eDP-1   | 14          |  6             | 0              
+| eDP-1   | 14          |  6             | 0             |
 
 ### Toggle Tag
 ```bash
