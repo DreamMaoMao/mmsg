@@ -62,6 +62,7 @@ Supported layouts:
 - "M" → monocle
 - "D" → dwindle
 - "P" → spiral
+- "K" → deck
 
 ```bash
 mmsg -l "S" # switch to scroller layout
