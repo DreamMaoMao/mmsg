@@ -32,6 +32,7 @@ static int mflag;
 static int fflag;
 static int qflag;
 static int dflag;
+static int xflag;
 
 static uint32_t occ, seltags, total_clients, urg;
 
@@ -177,6 +178,34 @@ dwl_ipc_output_appid(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output,
     printf("appid %s\n", appid);
 }
 
+static void dwl_ipc_output_x(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output, int32_t x) {
+    if (!xflag) return;
+    char *output_name = data;
+    if (output_name) printf("%s ", output_name);
+    printf("x %d\n", x);
+}
+
+static void dwl_ipc_output_y(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output, int32_t y) {
+    if (!xflag) return;
+    char *output_name = data;
+    if (output_name) printf("%s ", output_name);
+    printf("y %d\n", y);
+}
+
+static void dwl_ipc_output_width(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output, int32_t width) {
+    if (!xflag) return;
+    char *output_name = data;
+    if (output_name) printf("%s ", output_name);
+    printf("width %d\n", width);
+}
+
+static void dwl_ipc_output_height(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output, int32_t height) {
+    if (!xflag) return;
+    char *output_name = data;
+    if (output_name) printf("%s ", output_name);
+    printf("height %d\n", height);
+}
+
 static void
 dwl_ipc_output_fullscreen(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output,
     uint32_t is_fullscreen)
@@ -298,6 +327,10 @@ static const struct zdwl_ipc_output_v2_listener dwl_ipc_output_listener = {
     .layout_symbol = dwl_ipc_output_layout_symbol,
     .fullscreen = dwl_ipc_output_fullscreen,
     .floating = dwl_ipc_output_floating,
+    .x = dwl_ipc_output_x,
+    .y = dwl_ipc_output_y,
+    .width = dwl_ipc_output_width,
+    .height = dwl_ipc_output_height,
     .frame = dwl_ipc_output_frame,
 };
 
@@ -547,13 +580,18 @@ main(int argc, char *argv[])
         if (mode == SET) usage();
         mode |= GET;
         break;
+    case 'x':
+        xflag = 1;
+        if (mode == SET) usage();
+        mode |= GET;
+        break;
     default:
         fprintf(stderr, "bad option %c\n", ARGC());
         usage();
     } ARGEND
     if (mode == NONE) usage();
-    if (mode & GET && !output_name && !(oflag || tflag || lflag || Oflag || Tflag || Lflag || cflag || vflag || mflag || fflag || dflag))
-        oflag = tflag = lflag = cflag = vflag = mflag = fflag = 1;
+    if (mode & GET && !output_name && !(oflag || tflag || lflag || Oflag || Tflag || Lflag || cflag || vflag || mflag || fflag || xflag || dflag))
+        oflag = tflag = lflag = cflag = vflag = mflag = fflag = xflag = 1;
 
     display = wl_display_connect(NULL);
     if (!display) die("bad display");
