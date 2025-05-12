@@ -405,8 +405,8 @@ usage(void)
 {
     fprintf(stderr, "usage:"
             "\t%s [-OTLq]\n"
-            "\t%s [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>] [-d <cmd> <arg1> <arg2>]\n"
-            "\t%s [-o <output>] (-g | -w) [-Ootlcvmf]\n",
+            "\t%s [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>] [-d <cmd>,<arg1>,<arg2>,<arg3>,<arg4>]\n"
+            "\t%s [-o <output>] (-g | -w) [-Ootlcvmfx]\n",
             argv0, argv0, argv0);
     exit(2);
 }

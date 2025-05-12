@@ -44,6 +44,7 @@ mmsg [-o <output>] (-g | -w) [-Ootlcvmf] [-d <cmd>,<arg1>,<arg2>]
 | `-m`   | Get fullscreen status |
 | `-f`   | Get floating status |
 | `-d`   | Execute maomao dispatch |
+| `-x`   | Get focused client geometry |
 
 ## Use Cases
 
