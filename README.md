@@ -7,6 +7,7 @@ A fork of [dwlmsg](https://codeberg.org/notchoc/dwlmsg)
 ### Arch Linux
 ```bash
 yay -S mmsg-git
+yay -S mprop-git # a script to get properties of a window by click
 ```
 
 ### Other Distributions
