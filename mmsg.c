@@ -47,6 +47,7 @@ static char *dispatch_arg1;
 static char *dispatch_arg2;
 static char *dispatch_arg3;
 static char *dispatch_arg4;
+static char *dispatch_arg5;
 
 struct output {
     char *output_name;
@@ -294,7 +295,7 @@ dwl_ipc_output_frame(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output)
             zdwl_ipc_output_v2_set_client_tags(dwl_ipc_output, and, xor);
         }
         if (dflag) {
-            zdwl_ipc_output_v2_dispatch(dwl_ipc_output, dispatch_cmd, dispatch_arg1, dispatch_arg2, dispatch_arg3, dispatch_arg4);
+            zdwl_ipc_output_v2_dispatch(dwl_ipc_output, dispatch_cmd, dispatch_arg1, dispatch_arg2, dispatch_arg3, dispatch_arg4, dispatch_arg5);
         }
         wl_display_flush(display);
         exit(0);
@@ -405,7 +406,7 @@ usage(void)
 {
     fprintf(stderr, "usage:"
             "\t%s [-OTLq]\n"
-            "\t%s [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>] [-d <cmd>,<arg1>,<arg2>,<arg3>,<arg4>]\n"
+            "\t%s [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>] [-d <cmd>,<arg1>,<arg2>,<arg3>,<arg4>,<arg5>]\n"
             "\t%s [-o <output>] (-g | -w) [-Ootlcvmfx]\n",
             argv0, argv0, argv0);
     exit(2);
@@ -466,84 +467,103 @@ main(int argc, char *argv[])
         if (!(mode & GET)) {
             mode = SET;
             char *arg = EARGF(usage());
-            
+
             // Trim leading and trailing whitespace from entire argument first
             while (isspace(*arg)) arg++;
             char *end = arg + strlen(arg) - 1;
             while (end > arg && isspace(*end)) end--;
             *(end + 1) = '\0';
-            
+
             dispatch_cmd = arg;
             char *comma1 = strchr(arg, ',');
             if (comma1) {
                 *comma1 = '\0';
-                
+
                 // Trim trailing whitespace from command
                 end = dispatch_cmd + strlen(dispatch_cmd) - 1;
                 while (end > dispatch_cmd && isspace(*end)) end--;
                 *(end + 1) = '\0';
-                
+
                 dispatch_arg1 = comma1 + 1;
                 // Trim leading whitespace from arg1
                 while (isspace(*dispatch_arg1)) dispatch_arg1++;
-                
+
                 // Trim trailing whitespace from arg1 before looking for next comma
                 end = dispatch_arg1 + strlen(dispatch_arg1) - 1;
                 while (end > dispatch_arg1 && isspace(*end)) end--;
                 *(end + 1) = '\0';
-                
+
                 char *comma2 = strchr(dispatch_arg1, ',');
                 if (comma2) {
                     *comma2 = '\0';
                     dispatch_arg2 = comma2 + 1;
                     // Trim leading whitespace from arg2
                     while (isspace(*dispatch_arg2)) dispatch_arg2++;
-                    
+
                     // Trim trailing whitespace from arg2 before looking for next comma
                     end = dispatch_arg2 + strlen(dispatch_arg2) - 1;
                     while (end > dispatch_arg2 && isspace(*end)) end--;
                     *(end + 1) = '\0';
-                    
+
                     char *comma3 = strchr(dispatch_arg2, ',');
                     if (comma3) {
                         *comma3 = '\0';
                         dispatch_arg3 = comma3 + 1;
                         // Trim leading whitespace from arg3
                         while (isspace(*dispatch_arg3)) dispatch_arg3++;
-                        
+
                         // Trim trailing whitespace from arg3 before looking for next comma
                         end = dispatch_arg3 + strlen(dispatch_arg3) - 1;
                         while (end > dispatch_arg3 && isspace(*end)) end--;
                         *(end + 1) = '\0';
-                        
+
                         char *comma4 = strchr(dispatch_arg3, ',');
                         if (comma4) {
                             *comma4 = '\0';
                             dispatch_arg4 = comma4 + 1;
                             // Trim leading whitespace from arg4
                             while (isspace(*dispatch_arg4)) dispatch_arg4++;
-                            
-                            // Trim trailing whitespace from arg4
+
+                            // Trim trailing whitespace from arg4 before looking for next comma
                             end = dispatch_arg4 + strlen(dispatch_arg4) - 1;
                             while (end > dispatch_arg4 && isspace(*end)) end--;
                             *(end + 1) = '\0';
+
+                            char *comma5 = strchr(dispatch_arg4, ',');
+                            if (comma5) {
+                                *comma5 = '\0';
+                                dispatch_arg5 = comma5 + 1;
+                                // Trim leading whitespace from arg5
+                                while (isspace(*dispatch_arg5)) dispatch_arg5++;
+
+                                // Trim trailing whitespace from arg5
+                                end = dispatch_arg5 + strlen(dispatch_arg5) - 1;
+                                while (end > dispatch_arg5 && isspace(*end)) end--;
+                                *(end + 1) = '\0';
+                            } else {
+                                dispatch_arg5 = "";
+                            }
                         } else {
                             dispatch_arg4 = "";
+                            dispatch_arg5 = "";
                         }
                     } else {
                         dispatch_arg3 = "";
                         dispatch_arg4 = "";
+                        dispatch_arg5 = "";
                     }
                 } else {
                     dispatch_arg2 = "";
                     dispatch_arg3 = "";
                     dispatch_arg4 = "";
+                    dispatch_arg5 = "";
                 }
             } else {
                 dispatch_arg1 = "";
                 dispatch_arg2 = "";
                 dispatch_arg3 = "";
                 dispatch_arg4 = "";
+                dispatch_arg5 = "";
             }
         }
         break;
