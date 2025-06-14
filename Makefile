@@ -1,7 +1,11 @@
 BINS = mmsg
 
 PREFIX ?= /usr/local
-CFLAGS += -Wall -Wextra -Wno-unused-parameter -g
+
+PKG_CONFIG = pkg-config
+PKGS = wayland-client
+CFLAGS += `$(PKG_CONFIG) --cflags $(PKGS)`
+LDLIBS += `$(PKG_CONFIG) --libs $(PKGS)`
 
 all: $(BINS)
 
@@ -9,15 +13,17 @@ clean:
 	$(RM) $(BINS) *.o *-protocol.*
 
 install: all
-	install -D -t $(PREFIX)/bin $(BINS)
+	mkdir -p $(PREFIX)/bin
+	cp -f $(BINS) $(PREFIX)/bin
+
 uninstall:
 	rm -f $(PREFIX)/bin/$(BINS)
 
-WAYLAND_PROTOCOLS=$(shell pkg-config --variable=pkgdatadir wayland-protocols)
-WAYLAND_SCANNER=$(shell pkg-config --variable=wayland_scanner wayland-scanner)
+WAYLAND_PROTOCOLS=`pkg-config --variable=pkgdatadir wayland-protocols`
+WAYLAND_SCANNER=`pkg-config --variable=wayland_scanner wayland-scanner`
 
 mmsg: mmsg.o dwl-ipc-unstable-v2-protocol.o
-	$(CC) $^ -lwayland-client -o $@
+	$(CC) mmsg.o dwl-ipc-unstable-v2-protocol.o $(CFLAGS) $(LDLIBS) -o $@
 
 mmsg.o: mmsg.c dwl-ipc-unstable-v2-protocol.h
 
