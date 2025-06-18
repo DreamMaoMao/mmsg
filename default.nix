@@ -9,7 +9,10 @@ stdenv.mkDerivation {
   pname = "mmsg";
   version = "nightly";
 
-  src = ./.;
+  src = builtins.path {
+    path = ./.;
+    name = "source";
+  };
 
   nativeBuildInputs = [
     pkg-config
@@ -27,7 +30,7 @@ stdenv.mkDerivation {
   meta = {
     description = "Maomaowm ipc client";
     homepage = "https://github.com/DreamMaoMao/mmsg";
-    maintainers = with lib.maintainers; [ ];
+    maintainers = [];
     mainProgram = "mmsg";
     platforms = lib.platforms.all;
   };
