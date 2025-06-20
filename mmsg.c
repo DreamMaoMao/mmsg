@@ -679,9 +679,9 @@ int main(int argc, char *argv[]) {
 		usage();
 	if (mode & GET && !output_name &&
 		!(oflag || tflag || lflag || Oflag || Tflag || Lflag || cflag ||
-		  vflag || mflag || fflag || xflag || dflag || jflag))
-		oflag = tflag = lflag = cflag = vflag = mflag = fflag = xflag = jflag =
-			1;
+		  vflag || mflag || fflag || xflag || dflag))
+		if (!jflag)
+			oflag = tflag = lflag = cflag = vflag = mflag = fflag = xflag = 1;
 
 	display = wl_display_connect(NULL);
 	if (!display)
