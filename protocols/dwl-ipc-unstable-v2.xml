@@ -178,18 +178,11 @@ I would probably just submit raphi's patchset but I don't think that would be po
     </request>
 
     <!-- Version 2 -->
-    <event name="fullscreen" since="2">
-      <description summary="Update fullscreen status">
-          Indicates if the selected client on this output is fullscreen.
+    <event name="json_data" since="2">
+      <description summary="Send JSON formatted data">
+        Allows sending arbitrary JSON formatted data to clients.
       </description>
-      <arg name="is_fullscreen" type="uint" summary="If the selected client is fullscreen. Nonzero is valid, zero invalid"/>
-    </event>
-
-    <event name="floating" since="2">
-      <description summary="Update the floating status">
-          Indicates if the selected client on this output is floating.
-      </description>
-      <arg name="is_floating" type="uint" summary="If the selected client is floating. Nonzero is valid, zero invalid"/>
+      <arg name="json" type="string" summary="JSON formatted data"/>
     </event>
 
     <event name="x" since="2">

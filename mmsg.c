@@ -8,6 +8,7 @@
 #include <wayland-client.h>
 #include <wayland-util.h>
 #include "dwl-ipc-unstable-v2-protocol.h"
+#include <cjson/cJSON.h>
 
 #define die(fmt, ...)    do { fprintf(stderr, fmt "\n", ##__VA_ARGS__); exit(EXIT_FAILURE); } while (0)
 
@@ -57,6 +58,9 @@ static DYNARR_DEF(struct output) outputs;
 
 static struct wl_display *display;
 static struct zdwl_ipc_manager_v2 *dwl_ipc_manager;
+
+static int jflag; // JSON 输出标志
+static cJSON *json_root = NULL; // 用于构建 JSON 对象
 
 // 为每个回调定义专用的空函数
 static void noop_geometry(void *data, struct wl_output *wl_output,
@@ -208,23 +212,13 @@ static void dwl_ipc_output_height(void *data, struct zdwl_ipc_output_v2 *dwl_ipc
 }
 
 static void
-dwl_ipc_output_fullscreen(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output,
-    uint32_t is_fullscreen)
+dwl_ipc_output_json_data(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output,
+    const char *json_str)
 {
-    if (!mflag) return;
-    char *output_name = data;
-    if (output_name) printf("%s ", output_name);
-    printf("fullscreen %u\n", is_fullscreen);
-}
-
-static void
-dwl_ipc_output_floating(void *data, struct zdwl_ipc_output_v2 *dwl_ipc_output,
-    uint32_t is_floating)
-{
-    if (!fflag) return;
-    char *output_name = data;
-    if (output_name) printf("%s ", output_name);
-    printf("floating %u\n", is_floating);
+    if (!jflag) return;
+    
+    // 直接打印接收到的 JSON 字符串
+    printf("%s\n", json_str);
 }
 
 static void
@@ -326,8 +320,7 @@ static const struct zdwl_ipc_output_v2_listener dwl_ipc_output_listener = {
     .title = dwl_ipc_output_title,
     .appid = dwl_ipc_output_appid,
     .layout_symbol = dwl_ipc_output_layout_symbol,
-    .fullscreen = dwl_ipc_output_fullscreen,
-    .floating = dwl_ipc_output_floating,
+    .json_data = dwl_ipc_output_json_data,
     .x = dwl_ipc_output_x,
     .y = dwl_ipc_output_y,
     .width = dwl_ipc_output_width,
@@ -407,7 +400,7 @@ usage(void)
     fprintf(stderr, "usage:"
             "\t%s [-OTLq]\n"
             "\t%s [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>] [-d <cmd>,<arg1>,<arg2>,<arg3>,<arg4>,<arg5>]\n"
-            "\t%s [-o <output>] (-g | -w) [-Ootlcvmfx]\n",
+            "\t%s [-o <output>] (-g | -w) [-Ootlcvmfxj]\n",
             argv0, argv0, argv0);
     exit(2);
 }
@@ -421,6 +414,11 @@ main(int argc, char *argv[])
         if (!(mode & GET)) {
             mode = SET;
         }
+        break;
+    case 'j':
+        jflag = 1;
+        if (mode == SET) usage();
+        mode |= GET;
         break;
     case 's':
         if (mode != NONE) usage();
@@ -610,8 +608,8 @@ main(int argc, char *argv[])
         usage();
     } ARGEND
     if (mode == NONE) usage();
-    if (mode & GET && !output_name && !(oflag || tflag || lflag || Oflag || Tflag || Lflag || cflag || vflag || mflag || fflag || xflag || dflag))
-        oflag = tflag = lflag = cflag = vflag = mflag = fflag = xflag = 1;
+    if (mode & GET && !output_name && !(oflag || tflag || lflag || Oflag || Tflag || Lflag || cflag || vflag || mflag || fflag || xflag || dflag || jflag))
+        oflag = tflag = lflag = cflag = vflag = mflag = fflag = xflag = jflag = 1;
 
     display = wl_display_connect(NULL);
     if (!display) die("bad display");
