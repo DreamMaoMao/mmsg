@@ -28,7 +28,7 @@ Basic syntax:
 ```
 mmsg [-OTL]
 mmsg [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>]
-mmsg [-o <output>] (-g | -w) [-Ootlcvmf] [-d <cmd>,<arg1>,<arg2>]
+mmsg [-o <output>] (-g | -w) [-Ootlcvmfjx] [-d <cmd>,<arg1>,<arg2>]
 ```
 
 ### Options
@@ -51,6 +51,7 @@ mmsg [-o <output>] (-g | -w) [-Ootlcvmf] [-d <cmd>,<arg1>,<arg2>]
 | `-f`   | Get floating status |
 | `-d`   | Execute maomao dispatch |
 | `-x`   | Get focused client geometry |
+| `-j`   | Get all clients and monitors message in json|
 
 ## Use Cases
 
