@@ -328,25 +328,29 @@ static void dwl_ipc_output_frame(void *data,
                 dispatch_arg3, dispatch_arg4, dispatch_arg5);
         }
         wl_display_flush(display);
-        done = 1; // 设置退出标志而不是直接退出
-        return;   // 立即返回，避免执行后续代码
-    } else {
-        if (tflag) {
-            char *output_name = data;
-
-            printf("%s clients %u\n", output_name, total_clients);
-
-            char occ_str[10], seltags_str[10], urg_str[10];
-
-            bin_str_9bits(occ_str, occ);
-            bin_str_9bits(seltags_str, seltags);
-            bin_str_9bits(urg_str, urg);
-            printf("%s tags %u %u %u\n", output_name, occ, seltags, urg);
-            printf("%s tags %s %s %s\n", output_name, occ_str, seltags_str,
-                   urg_str);
-            occ = seltags = total_clients = urg = 0;
-        }
+        done = 1; // 设置退出标志
+        return;   // 立即返回
+    } else if (mode & GET) {
+        // 对于 GET 模式，处理完数据后设置退出标志
+        done = 1;
     }
+    
+    if (tflag) {
+        char *output_name = data;
+
+        printf("%s clients %u\n", output_name, total_clients);
+
+        char occ_str[10], seltags_str[10], urg_str[10];
+
+        bin_str_9bits(occ_str, occ);
+        bin_str_9bits(seltags_str, seltags);
+        bin_str_9bits(urg_str, urg);
+        printf("%s tags %u %u %u\n", output_name, occ, seltags, urg);
+        printf("%s tags %s %s %s\n", output_name, occ_str, seltags_str,
+               urg_str);
+        occ = seltags = total_clients = urg = 0;
+    }
+    
     fflush(stdout);
 }
 
@@ -712,17 +716,27 @@ int main(int argc, char *argv[]) {
     wl_display_roundtrip(display);
 
     if (mode == WATCH) {
-        while (!done && wl_display_dispatch(display) != -1) {
-            // 监听模式持续运行，直到外部中断或错误
+        // 监听模式：持续运行直到中断
+        while (wl_display_dispatch(display) != -1) {
+            // 持续监听
         }
     } else {
-        // GET 或 SET 模式：等待操作完成
-        while (!done && wl_display_dispatch(display) != -1) {
-            // 等待 done 标志被设置
+        // GET/SET 模式：处理一次事件后立即退出
+        
+        // 设置超时时间为 1000 毫秒（1秒）
+        struct pollfd fds[1];
+        fds[0].fd = wl_display_get_fd(display);
+        fds[0].events = POLLIN;
+        
+        // 处理事件直到完成或超时
+        while (!done && poll(fds, 1, 1000) > 0) {
+            if (fds[0].revents & POLLIN) {
+                wl_display_dispatch(display);
+            }
         }
     }
     
-    cleanup();  // 显式调用清理函数
+    cleanup();  // 清理资源
 
     return 0;
 }
