@@ -4,11 +4,6 @@ A fork of [dwlmsg](https://codeberg.org/notchoc/dwlmsg)
 
 ## Installation
 
-#### dependcy
-```
-yay -S cjson
-```
-
 ### Arch Linux
 ```bash
 yay -S mmsg-git

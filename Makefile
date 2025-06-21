@@ -4,7 +4,7 @@ PREFIX ?= /usr/local
 
 PKG_CONFIG = pkg-config
 PKGS = wayland-client
-CFLAGS += `$(PKG_CONFIG) --cflags $(PKGS) -lcjson`
+CFLAGS += `$(PKG_CONFIG) --cflags $(PKGS)`
 LDLIBS += `$(PKG_CONFIG) --libs $(PKGS)`
 
 all: $(BINS)

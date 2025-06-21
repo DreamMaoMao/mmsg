@@ -1,7 +1,6 @@
 #include "arg.h"
 #include "dwl-ipc-unstable-v2-protocol.h"
 #include "dynarr.h"
-#include <cjson/cJSON.h>
 #include <ctype.h>
 #include <poll.h>
 #include <stdio.h>
@@ -63,8 +62,7 @@ static DYNARR_DEF(struct output) outputs;
 static struct wl_display *display;
 static struct zdwl_ipc_manager_v2 *dwl_ipc_manager;
 
-static int jflag;				// JSON 输出标志
-static cJSON *json_root = NULL; // 用于构建 JSON 对象
+static int jflag; // JSON 输出标志
 
 // 为每个回调定义专用的空函数
 static void noop_geometry(void *data, struct wl_output *wl_output, int32_t x,
