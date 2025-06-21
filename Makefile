@@ -10,7 +10,7 @@ LDLIBS += `$(PKG_CONFIG) --libs $(PKGS)`
 all: $(BINS)
 
 clean:
-	$(RM) $(BINS) *.o *-protocol.*
+	rm -f $(BINS) *.o *-protocol.*
 
 install: all
 	mkdir -p $(PREFIX)/bin
