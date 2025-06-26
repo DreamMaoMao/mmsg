@@ -46,6 +46,7 @@ mmsg [-o <output>] (-g | -w) [-Ootlcvmf] [-d <cmd>,<arg1>,<arg2>]
 | `-f`   | Get floating status |
 | `-d`   | Execute maomao dispatch |
 | `-x`   | Get focused client geometry |
+| `-e`   | Get last layer name |
 
 ## Use Cases
 
