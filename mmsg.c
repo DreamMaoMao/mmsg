@@ -459,7 +459,7 @@ static void usage(void) {
           "\t%s [-OTLq]\n"
           "\t%s [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>] [-d "
           "<cmd>,<arg1>,<arg2>,<arg3>,<arg4>,<arg5>]\n"
-          "\t%s [-o <output>] (-g | -w) [-Ootlcvmfx]\n",
+          "\t%s [-o <output>] (-g | -w) [-Ootlcvmfxe]\n",
           argv0, argv0, argv0);
   exit(2);
 }
