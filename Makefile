@@ -1,6 +1,6 @@
 BINS = mmsg
 
-PREFIX ?= /usr/local
+PREFIX ?= /usr
 
 PKG_CONFIG = pkg-config
 PKGS = wayland-client
