@@ -1,4 +1,4 @@
-# mmsg - Send IPC messages to maomaowm
+# mmsg - Send IPC messages to mango
 
 A fork of [dwlmsg](https://codeberg.org/notchoc/dwlmsg)
 
@@ -30,7 +30,7 @@ mmsg [-o <output>] (-g | -w) [-Ootlcvmf] [-d <cmd>,<arg1>,<arg2>]
 
 | Option | Description |
 |--------|-------------|
-| `-q`   | Quit maomao |
+| `-q`   | Quit mango |
 | `-g`   | Get value |
 | `-s`   | Set value |
 | `-w`   | Watch for changes |
@@ -44,13 +44,13 @@ mmsg [-o <output>] (-g | -w) [-Ootlcvmf] [-d <cmd>,<arg1>,<arg2>]
 | `-v`   | Get visibility of statusbar |
 | `-m`   | Get fullscreen status |
 | `-f`   | Get floating status |
-| `-d`   | Execute maomao dispatch |
+| `-d`   | Execute mango dispatch |
 | `-x`   | Get focused client geometry |
 | `-e`   | Get last layer name |
 
 ## Use Cases
 
-### Execute maomao dispatch
+### Execute mango dispatch
 
 ```bash
 mmsg -d killclient

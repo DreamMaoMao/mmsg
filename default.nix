@@ -28,7 +28,7 @@ stdenv.mkDerivation {
   '';
 
   meta = {
-    description = "Maomaowm ipc client";
+    description = "Mango ipc client";
     homepage = "https://github.com/DreamMaoMao/mmsg";
     maintainers = [];
     mainProgram = "mmsg";
