@@ -47,6 +47,7 @@ mmsg [-o <output>] (-g | -w) [-Ootlcvmf] [-d <cmd>,<arg1>,<arg2>]
 | `-d`   | Execute mango dispatch |
 | `-x`   | Get focused client geometry |
 | `-e`   | Get last layer name |
+| `-k`   | Get current keyboard layout |
 
 ## Use Cases
 

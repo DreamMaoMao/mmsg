@@ -38,6 +38,7 @@ static int qflag;
 static int dflag;
 static int xflag;
 static int eflag;
+static int kflag;
 
 static uint32_t occ, seltags, total_clients, urg;
 
@@ -250,6 +251,17 @@ static void dwl_ipc_output_last_layer(void *data,
   printf("last_layer %s\n", last_layer);
 }
 
+static void dwl_ipc_output_kb_layout(void *data,
+                                     struct zdwl_ipc_output_v2 *dwl_ipc_output,
+                                     const char *kb_layout) {
+  if (!kflag)
+    return;
+  char *output_name = data;
+  if (output_name)
+    printf("%s ", output_name);
+  printf("kb_layout %s\n", kb_layout);
+}
+
 static void dwl_ipc_output_fullscreen(void *data,
                                       struct zdwl_ipc_output_v2 *dwl_ipc_output,
                                       uint32_t is_fullscreen) {
@@ -384,6 +396,7 @@ static const struct zdwl_ipc_output_v2_listener dwl_ipc_output_listener = {
     .width = dwl_ipc_output_width,
     .height = dwl_ipc_output_height,
     .last_layer = dwl_ipc_output_last_layer,
+    .kb_layout = dwl_ipc_output_kb_layout,
     .frame = dwl_ipc_output_frame,
 };
 
@@ -459,7 +472,7 @@ static void usage(void) {
           "\t%s [-OTLq]\n"
           "\t%s [-o <output>] -s [-t <tags>] [-l <layout>] [-c <tags>] [-d "
           "<cmd>,<arg1>,<arg2>,<arg3>,<arg4>,<arg5>]\n"
-          "\t%s [-o <output>] (-g | -w) [-Ootlcvmfxe]\n",
+          "\t%s [-o <output>] (-g | -w) [-Ootlcvmfxek]\n",
           argv0, argv0, argv0);
   exit(2);
 }
@@ -686,6 +699,12 @@ int main(int argc, char *argv[]) {
       usage();
     mode |= GET;
     break;
+  case 'k':
+    kflag = 1;
+    if (mode == SET)
+      usage();
+    mode |= GET;
+    break;
   default:
     fprintf(stderr, "bad option %c\n", ARGC());
     usage();
@@ -695,8 +714,8 @@ int main(int argc, char *argv[]) {
     usage();
   if (mode & GET && !output_name &&
       !(oflag || tflag || lflag || Oflag || Tflag || Lflag || cflag || vflag ||
-        mflag || fflag || xflag || eflag || dflag))
-    oflag = tflag = lflag = cflag = vflag = mflag = fflag = xflag = eflag = 1;
+        mflag || fflag || xflag || eflag || kflag || dflag))
+    oflag = tflag = lflag = cflag = vflag = mflag = fflag = xflag = eflag = kflag = 1;
 
   display = wl_display_connect(NULL);
   if (!display)
