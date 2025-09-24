@@ -106,4 +106,9 @@ Example output:
 mmsg -s -t 2+ # add current window to tag 2
 mmsg -s -t 2- # remove current window from tag 2
 mmsg -s -t 2^ # toggle current window in tag 2
+
+mmsg -t 2 # switch to tag 2
+mmsg -t 2+ # add tag 2 to current view
+mmsg -t 2- # remove tag 2 from current view
+mmsg -t 2^ # toggle tag 2 in current view
 ```
