@@ -48,6 +48,7 @@ mmsg [-o <output>] (-g | -w) [-Ootlcvmf] [-d <cmd>,<arg1>,<arg2>]
 | `-x`   | Get focused client geometry |
 | `-e`   | Get last layer name |
 | `-k`   | Get current keyboard layout |
+| `-b`   | Get current keybind mode |
 
 ## Use Cases
 
