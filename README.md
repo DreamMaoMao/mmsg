@@ -65,9 +65,10 @@ Supported layouts:
 - "T" → tile
 - "G" → grid
 - "M" → monocle
-- "D" → dwindle
-- "P" → spiral
 - "K" → deck
+- "VS" → verticla scroller
+- "VT" → verticla tile
+- "CT" → center tile
 
 ```bash
 mmsg -l "S" # switch to scroller layout
