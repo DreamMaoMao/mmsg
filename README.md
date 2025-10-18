@@ -1,3 +1,6 @@
+# This project has been integrated into mangowc and is no longer a separate repo.
+
+
 # mmsg - Send IPC messages to mango
 
 A fork of [dwlmsg](https://codeberg.org/notchoc/dwlmsg)
